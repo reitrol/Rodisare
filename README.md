@@ -7,7 +7,7 @@ Rodisare - A simple RSS/Atom feed reader for Django
 ### INFO
 
 Rodisare is a lightweight feed reader for Django.
-It was a student project with beginning on 2013-05-18 and ended on 2013-06-16 during their "Agile web applications with Python" 
+It was a student project with beginning on 2013-05-18 and ended on 2013-06-16 during our "Agile web applications with Python" 
 course in Computer Science (Bachelor) at the University of Applied Sciences Augsburg.
 
 RSS 0.9 – 2.0
