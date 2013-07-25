@@ -1,0 +1,33 @@
+#login_text {
+    text-align: right;
+    font-weight: bold
+}
+
+#login_input {
+    text-align: left;
+}
+
+#login_button {
+    text-align: left;
+}
+
+#login_table {
+    background-color: gray;
+
+    border-collapse: separate;
+    border-spacing: 10px 10px;
+
+    -moz-border-radius:10px; /* Firefox */
+    -webkit-border-radius:10px; /* Safari, Chrome */
+    -khtml-border-radius:10px; /* Konqueror */
+    border-radius:10px; /* CSS3 */
+
+    -moz-box-shadow: 5px 5px 5px #ddd;
+    -webkit-box-shadow: 5px 5px 5px #ddd;
+    box-shadow: 5px 5px 5px #ddd;
+}
+
+#error_message {
+    color: firebrick;
+    font-weight: bold;
+}

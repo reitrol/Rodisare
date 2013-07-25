@@ -1,0 +1,175 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Rodisare | {% block title %}Feedreader{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <link href="/static/img/favicon.ico" rel="shortcut icon" type="image/vnd.microsoft.icon" />
+
+    <!-- Le styles -->
+    <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        }
+    </style>
+    <link href="{% static "bootstrap/css/bootstrap-responsive.css" %}" rel="stylesheet">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="{% static "bootstrap/js/jquery-2.0.0.js" %}" type="text/javascript"></script>
+    <script src="{% static "bootstrap/js/bootstrap.js" %}" type="text/javascript"></script>
+</head>
+
+<body>
+<div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </a>
+            <a class="brand" href="/">Rodisare</a>
+
+            <div class="nav-collapse collapse">
+                <ul class="nav">
+                    <li class="active"><a href="/feedreader"><i class="icon-home"></i> Home</a></li>
+                    <li class="divider-vertical"></li>
+
+                    {% ifnotequal user "Anonymous" %}
+                        <li><a href="/feedreader/manage?pagetab=feeds"><i class="icon-tags"></i> Manage</a></li>
+                        <li class="divider-vertical"></li>
+                    {% endifnotequal %}
+                </ul>
+
+                {% ifnotequal user "Anonymous" %}
+                    <form class="navbar-search pull-left" method="post" action="#"
+                          accept-charset="UTF-8">{% csrf_token %}
+                        <input name="submitSearch" type="text" class="search-query" placeholder="Search">
+                    </form>
+                {% endifnotequal %}
+
+            </div>
+            <!--/.nav-collapse -->
+
+            <div class="nav-collapse collapse">
+                <div class="pull-right">
+                    <ul class="nav pull-right">
+
+                        {% ifnotequal user "Anonymous" %}
+                            <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Welcome, {{ user }}
+                                <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/feedreader/manage?pagetab=feeds"><i class="icon-tags"></i> Manage</a></li>
+                                    <li><a href="/feedreader/manage?pagetab=user"><i class="icon-cog"></i> Preferences</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="/feedreader/logout"><i class="icon-off"></i> Logout</a></li>
+                                </ul>
+                            </li>
+                        {% endifnotequal %}
+
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span3">
+            <img style="margin-bottom: 5px;" src="/static/img/lefttop.jpg" height=212 />
+            <div class="well sidebar-nav">
+                <ul class="nav nav-list">
+                    <li class="nav-header"><a href="/feedreader">My newsfeeds</a></li>
+                    {% for feed in feeds %}
+                        <li><a href="/feedreader/displayfeed?fid={{ feed.id }}">{{ feed.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!--/.well -->
+        </div>
+        <!--/span-->
+
+        <div class="span9">
+            <div class="tab-content">
+                <div class="tab-pane active" id="feeds">
+
+                    <table class="table table-striped">
+                        <tbody>
+                            <div class="tab-pane" id="{{ feed.id }}">
+                                <div id="legend">
+                                    <legend class="">{{ entry.title_detail_value }}</legend>
+                                </div>
+                            {%  if feed.error %}
+                                {{ feed.error }}
+                            {% elif feed %}
+
+                                {% if entry.author or entry.comments %}
+                                    <table class="table table-striped">
+                                        <tbody>
+
+                                        {% if entry.author %}
+                                            <tr>
+                                                <td>Author</td>
+                                                <td>{{ entry.author }}</td>
+                                            </tr>
+                                        {% endif %}
+
+                                        {% if entry.comments %}
+                                            <tr>
+                                                <td>Comments</td>
+                                                <td>{{ entry.comments }}</td>
+                                            </tr>
+                                        {% endif %}
+                                        </tbody>
+                                </table>
+                                {% endif %}
+
+                                <br>
+
+                                <div style="float: left; margin: 5px 10px 10px 0; background-image:url(/static/img/img_placeholder.jpg); min-width:90px; min-height: 90px;">
+                                    {% if entry.linkImage %}
+                                        <img src="{{ entry.linkImage }}" />
+                                    {% endif %}
+                                </div>
+
+
+                                <div style="display:table;">
+                                    {% autoescape off %}
+                                        <p>{{ entry.summary_detail_value }}</p>
+                                    {% endautoescape %}
+                                    <div style="color:gray; margin-bottom: 5px;">{{ entry.feedName }}  ({{ entry.published }})</div>
+                                    <div style="margin-right:20px; float: left;"><a class="btn" href="{{ entry.link }}" target="_blank">Read on in a new tab &raquo;</a></div>
+                                    <div style="margin-right:20px; float: left;"><a class="btn" href="/feedreader/displayfeedinfo?info=show&fid={{ feed.id }}">View feed information &raquo;</a></div>
+                                    <div style="margin-right:20px; float: left;"><a class="btn" href="/feedreader/displayfeed?fid={{ feed.id }}">View all entries of this feed &raquo;</a></div>
+                                    <div style="clear:both;"></div>
+                                </div>
+                            {% endif %}
+                            </div>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--/row-->
+
+    <footer style="text-align:center; background-color:white; position: fixed; bottom: 3px;">
+        &copy; Rodisare 2013
+    </footer>
+</div>
+<!--/.fluid-container-->
+</body>
+</html>
