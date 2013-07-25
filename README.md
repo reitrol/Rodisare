@@ -21,7 +21,9 @@ Django 1.5.1
 
 Bootstrap 2.3.2
 
-jQuery 2.0.0 
+jQuery 2.0.0
+
+feedparser http://code.google.com/p/feedparser/
 
 ### PARTY
 Reitböck Roland
